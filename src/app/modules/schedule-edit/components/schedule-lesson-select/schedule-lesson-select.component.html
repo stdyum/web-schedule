@@ -1,0 +1,12 @@
+<fbm-text-input [formControl]="searchFormControl" label="Search" />
+
+@if (searchedLessons$(); as lessons) {
+  <section>
+    <button class="add" (click)="select()">
+      <mat-icon>add</mat-icon>
+    </button>
+    @for (lesson of lessons; track lesson) {
+      <schedule-lesson (click)="select(lesson)" [lesson]="lesson" />
+    }
+  </section>
+}

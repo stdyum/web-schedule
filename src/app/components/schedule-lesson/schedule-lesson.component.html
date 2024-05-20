@@ -1,0 +1,25 @@
+@if (showForeground) {
+  <div class="not-updated-foreground"></div>
+}
+@if (!routing) {
+  <div class="foreground"></div>
+}
+<main [style.background-color]="lesson.primaryColor" [style.z-index]="routing ? 2 : ''">
+  <div [style.background]="lesson.secondaryColor" class="secondaryColorContainer"></div>
+
+  <h4 class="subject-name" (click)="navigate(routerLink('subject'))">
+    {{ lesson.subject.name }}
+  </h4>
+
+  <p class="teacher-name" (click)="navigate(routerLink('teacher'))">
+    {{ lesson.teacher.name }}
+  </p>
+
+  <p class="room-name" (click)="navigate(routerLink('room'))">
+    {{ lesson.room.name }}
+  </p>
+
+  <p class="group-name" (click)="navigate(routerLink('group'))">
+    {{ lesson.group.name }}
+  </p>
+</main>

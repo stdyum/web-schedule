@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+:host::ng-deep default-form form {
+  padding-left: unset;
+}
+
+character {
+  height: 75%;
+  max-height: 450px;
+  aspect-ratio: 1/1;
+}

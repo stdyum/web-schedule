@@ -1,0 +1,9 @@
+<state-mapper [observable]="schedule$">
+  <ng-container *stateMapperDefaultState="let type = type">
+    <schedule-plug />
+  </ng-container>
+  <ng-container *stateMapperLoadedState="let data = data">
+    <schedule-add-lesson-view *hasPermission="'editSchedule'" [availableLessons]="data.lessons" />
+    <base-schedule [schedule]="data" />
+  </ng-container>
+</state-mapper>

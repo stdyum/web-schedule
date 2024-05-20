@@ -1,0 +1,17 @@
+<wrapped-carousel
+  [itemHeight]="100"
+  [showActions]="true"
+>
+  @for (lesson of lessons; track lesson) {
+    <div *carouselItem class="item">
+      @if ($any(lesson).type !== "general") {
+        <schedule-lesson-actions *hasPermission="'editSchedule'" [lesson]="lesson" />
+      }
+      <schedule-lesson
+        [lesson]="lesson"
+        [routing]="instantRouting()"
+        [showForeground]="$any(lesson).type === 'general'"
+      />
+    </div>
+  }
+</wrapped-carousel>

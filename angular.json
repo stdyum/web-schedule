@@ -13,6 +13,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "statsJson": true,
+            "preserveSymlinks": true
             "outputPath": "dist/schedule",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -94,6 +96,11 @@
           }
         }
       }
+    }
+  },
+  "cli": {
+    "cache": {
+      "enabled": false
     }
   }
 }

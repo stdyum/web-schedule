@@ -1,0 +1,23 @@
+:host {
+  color: black;
+  cursor: pointer;
+}
+
+::ng-deep .mat-mdc-menu-item .mat-icon {
+  margin: 0 !important;
+}
+
+::ng-deep .mat-mdc-menu-content {
+  .mat-mdc-menu-item-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--indent2);
+    width: 100%;
+  }
+
+  .danger {
+    color: red;
+    --mat-menu-item-icon-color: red;
+  }
+}

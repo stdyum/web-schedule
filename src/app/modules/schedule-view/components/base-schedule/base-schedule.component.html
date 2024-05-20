@@ -1,0 +1,31 @@
+@if (modeCalculator$ | async; as mode) {
+  <div class="empty-corner"></div>
+
+  <div class="markup">
+    @for (markupEntry of mode.markup; track markupEntry) {
+      <hr [style.margin-top.px]="markupEntry.y" />
+    }
+  </div>
+
+  <div class="row-container">
+    @for (row of mode.rows; track row) {
+      <p class="row" [style.margin-top.px]="row.y" [style.height.px]="row.height">{{ row.title }}</p>
+    }
+  </div>
+
+  <div class="weekdays-container">
+    @for (day of mode.days; track day) {
+      <p class="weekday">{{ day }}</p>
+    }
+  </div>
+  <div class="lessons-container">
+    @for (lessons of schedule.lessons | scheduleModeGroupLessons: mode; track lessons) {
+      <schedule-cell
+        scheduleCellPosition
+        [modeCalculator]="mode"
+        [lessons]="lessons"
+        [startTime]="schedule.info.startDate"
+      />
+    }
+  </div>
+}

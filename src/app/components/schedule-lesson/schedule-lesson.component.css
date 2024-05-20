@@ -1,0 +1,79 @@
+:host {
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.subject-name {
+  grid-area: subject;
+}
+
+.teacher-name {
+  grid-area: teacher;
+}
+
+.room-name {
+  grid-area: room;
+}
+
+.group-name {
+  grid-area: group;
+  justify-content: flex-end;
+}
+
+main .secondaryColorContainer {
+  grid-area: secondary;
+  width: var(--indent2);
+  margin-right: var(--indent1);
+  height: 100%;
+}
+
+p, h4 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+main {
+  display: grid;
+  grid-template-areas:
+    "secondary spacer spacer"
+    "secondary subject subject"
+    "secondary teacher teacher"
+    "secondary room group"
+    "secondary spacer2 spacer2";
+  grid-template-columns: var(--indent3) 1fr 1fr;
+  grid-template-rows: var(--indent1) 1fr 1fr 1fr var(--indent1);
+  flex-grow: 1;
+  flex-basis: 0;
+  height: min(100%, 125px);
+  max-height: 100%;
+  width: 100%;
+  min-width: 0;
+  grid-row-gap: calc(var(--indent1) / 2);
+  padding: 0 var(--indent3) 0 0;
+  color: black;
+
+  & > * {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.not-updated-foreground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.foreground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}

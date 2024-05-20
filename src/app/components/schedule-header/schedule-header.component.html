@@ -1,0 +1,23 @@
+<button mat-icon-button (click)="showSearchDialog()">
+  <mat-icon>search</mat-icon>
+</button>
+
+<button mat-icon-button (click)="toggleViewType()">
+  <mat-icon>schedule</mat-icon>
+</button>
+
+@if (mode$ | async; as mode) {
+  @if (mode === "table" || mode === "tableExpanded") {
+    <button mat-icon-button (click)="toggleExpand()">
+      <mat-icon>expand</mat-icon>
+    </button>
+  }
+}
+
+<button mat-icon-button (click)="toggleViewMode()">
+  <mat-icon>today</mat-icon>
+</button>
+
+@if (schedule$ | async; as schedule) {
+  <breadcrumbs-view [items]="breadcrumbs(schedule)" />
+}

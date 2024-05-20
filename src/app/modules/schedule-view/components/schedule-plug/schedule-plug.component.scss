@@ -1,0 +1,121 @@
+@use "sass:list";
+@use "sass:math";
+
+$times: (0, 60, 70, 130, 150, 210, 220, 280, 310, 370);
+$lessons: (
+    ((0, 60), (70, 130), (150, 210)),
+    ((70, 130), (150, 210), (220, 280)),
+    ((70, 130), (150, 210), (220, 280)),
+    ((0, 60), (70, 130), (150, 210)),
+    ((0, 60), (70, 130), (150, 210), (220, 280)),
+    ((70, 130), (150, 210), (220, 280), (310, 370))
+);
+
+:host {
+  display: grid;
+  grid-template-areas: ". weekdays" "times main";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-gap: var(--indent2);
+  margin-top: var(--indent3);
+}
+
+.weekdays {
+  grid-area: weekdays;
+  display: flex;
+  gap: 12px;
+  height: 20px;
+
+  & > * {
+    width: 180px;
+    height: 100%;
+  }
+}
+
+.times {
+  margin-left: var(--indent2);
+  grid-area: times;
+  display: grid;
+  width: 75px;
+
+  & > * {
+    width: 100%;
+    height: 20px;
+    grid-row: 1;
+    grid-column: 1;
+
+    @for $i from 1 through list.length($times) {
+      $item: list.nth($times, $i);
+
+      &:nth-child(#{$i}) {
+        margin-top: $item * 2.5px;
+      }
+    }
+  }
+}
+
+.markup {
+  grid-area: main;
+  display: grid;
+
+  hr {
+    grid-row: 1;
+    grid-column: 1;
+    margin: 0;
+    width: 100%;
+    opacity: 0.6;
+    border-right: unset;
+    border-bottom: unset;
+    border-left: unset;
+    color: var(--on-primary-background-color);
+    border-top: 1px dashed var(--on-primary-background-color);
+
+
+    @for $i from 1 through list.length($times) {
+      $item: list.nth($times, $i);
+
+      &:nth-child(#{$i}) {
+        margin-top: $item * 2.5px;
+      }
+    }
+  }
+}
+
+main {
+  grid-area: main;
+  display: grid;
+  column-gap: 12px;
+  width: fit-content;
+
+  & > * {
+    grid-row: 1;
+    width: 180px;
+
+    $acc: 1;
+    @for $column from 1 through list.length($lessons) {
+      $items: list.nth($lessons, $column);
+
+      @for $i from 1 through list.length($items) {
+        $item: list.nth($items, $i);
+
+        &:nth-child(#{$acc}) {
+          --v: #{$item};
+          --l: #{list.length($items)};
+          $margin: list.nth($item, 1);
+          $height: list.nth($item, 2) - $margin;
+
+          grid-column: $column;
+          margin-top: $margin * 2.5px;
+          height: $height * 2.5px;
+        }
+
+        $acc: $acc + 1;
+      }
+    }
+  }
+}
+
+div {
+  background-color: gray;
+  border-radius: var(--border-radius1);
+}

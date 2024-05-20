@@ -1,0 +1,13 @@
+:host {
+  overflow-y: scroll;
+  width: unset;
+}
+
+container-secondary {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--indent1);
+  width: 250px;
+  height: 100%;
+}

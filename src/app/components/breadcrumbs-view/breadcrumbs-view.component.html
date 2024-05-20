@@ -1,0 +1,6 @@
+@for (item of items; track item; let isFirst = $first) {
+  @if (!isFirst) {
+    <mat-icon>{{ divider }}</mat-icon>
+  }
+  <h3>{{ item }}</h3>
+}
