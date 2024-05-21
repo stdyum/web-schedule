@@ -101,8 +101,6 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
 
     this.markup = this.rows.map(r => <MarkupEntry>{ y: r.y + r.height! + this.rowIndent });
     this.markup.pop();
-
-    console.log(this);
   }
 
   height(lessons: ScheduleLesson[]): number {
@@ -119,6 +117,7 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
   }
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
+    if ('dayIndex' in lessons[0]) return lessons[0].dayIndex + 1
     return datesDiff(lessons[0].endTime, this.start, dateUnits.day) + 1;
   }
 

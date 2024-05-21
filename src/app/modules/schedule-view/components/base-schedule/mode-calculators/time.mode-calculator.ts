@@ -112,6 +112,8 @@ export class TimeModeCalculator implements IModeCalculator {
   }
 
   y(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
+    if ('dayIndex' in lessons[0]) return lessons[0].dayIndex + 1
+
     const date = lessons[0].startTime;
     return this.yTime(date) - this.yOffset;
   }
