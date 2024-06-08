@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "statsJson": true,
-            "preserveSymlinks": true
+            "preserveSymlinks": true,
             "outputPath": "dist/schedule",
             "index": "src/index.html",
             "browser": "src/main.ts",
