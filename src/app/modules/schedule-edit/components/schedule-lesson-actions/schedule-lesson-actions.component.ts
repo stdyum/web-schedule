@@ -20,6 +20,7 @@ import {
 } from '../../dialogs/schedule-add-genral-lesson-dialog/schedule-add-general-lesson-dialog.component';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+import { TranslationPipe } from '@likdan/studyum-core';
 
 @Component({
   selector: 'schedule-lesson-actions',
@@ -32,6 +33,7 @@ import { MatIcon } from '@angular/material/icon';
     MatMenuItem,
     MatIcon,
     MatMenuTrigger,
+    TranslationPipe,
   ],
 })
 export class ScheduleLessonActionsComponent {

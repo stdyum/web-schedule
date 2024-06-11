@@ -1,4 +1,4 @@
-<fbm-text-input [formControl]="searchFormControl" label="Search" />
+<fbm-text-input [formControl]="searchFormControl" [label]="'lesson_select_search' | translation" />
 
 @if (searchedLessons$(); as lessons) {
   <section>

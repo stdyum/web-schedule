@@ -84,10 +84,10 @@ export class ScheduleHeaderComponent implements OnInit, OnDestroy {
 
   breadcrumbs(schedule: Schedule | GeneralSchedule): string[] {
     const base = [
-      schedule.info.column,
+      `schedule_breadcrumbs_${schedule.info.column}`,
       schedule.info.columnName,
-      this.service.display$.value,
-      this.service.mode$.value,
+      this.getDisplayBreadcrumb(this.service.display$.value),
+      this.getModeBreadcrumb(this.service.mode$.value),
     ];
 
     if ('startDate' in schedule.info && new Date(schedule.info.startDate).getMilliseconds() !== 0) {
@@ -101,5 +101,29 @@ export class ScheduleHeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.navigateSubscription?.unsubscribe();
+  }
+
+  private getDisplayBreadcrumb(value: string): string {
+    switch (value) {
+      case 'current':
+        return 'schedule_breadcrumbs_current';
+      case 'general':
+        return 'schedule_breadcrumbs_general';
+    }
+
+    return '';
+  }
+
+  private getModeBreadcrumb(value: string): string {
+    switch (value) {
+      case 'time':
+        return 'schedule_breadcrumbs_time';
+      case 'table':
+        return 'schedule_breadcrumbs_table';
+      case 'tableExpanded':
+        return 'schedule_breadcrumbs_table_expanded';
+    }
+
+    return '';
   }
 }

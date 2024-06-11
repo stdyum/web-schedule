@@ -18,6 +18,7 @@ import { TextInputComponent } from '@likdan/form-builder-material/src/components
 import { ScheduleLessonComponent } from '../../../../components/schedule-lesson/schedule-lesson.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
+import { TranslationPipe } from '@likdan/studyum-core';
 
 @Component({
   selector: 'schedule-lesson-select',
@@ -31,6 +32,7 @@ import { MatIconButton } from '@angular/material/button';
     ScheduleLessonComponent,
     MatIcon,
     MatIconButton,
+    TranslationPipe,
   ],
 })
 export class ScheduleLessonSelectComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {

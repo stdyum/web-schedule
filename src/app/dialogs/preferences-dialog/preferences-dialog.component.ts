@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilderComponent, FormConfig } from '@likdan/form-builder-core';
 import { Buttons, Controls } from '@likdan/form-builder-material';
-import { RegistryService } from '@likdan/studyum-core';
+import { RegistryService, TranslationService } from '@likdan/studyum-core';
 import { Validators } from '@angular/forms';
 import { take } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -21,20 +21,21 @@ export class PreferencesDialogComponent {
 
   private registry = inject(RegistryService);
   private dialog = inject(MatDialogRef);
+  private translation = inject(TranslationService);
 
   config = <FormConfig<any>>{
     controls: {
       column: {
         type: Controls.select,
-        label: 'Column',
+        label: this.translation.getTranslation('preferences_form_column'),
         additionalFields: {
           searchable: false,
-          items: [
-            { value: 'group', display: 'Group' },
-            { value: 'room', display: 'Room' },
-            { value: 'subject', display: 'Subject' },
-            { value: 'teacher', display: 'Teacher' },
-          ],
+          items: computed(() => [
+            { value: 'group', display: this.translation.getTranslation('preferences_form_column_group')() },
+            { value: 'room', display: this.translation.getTranslation('preferences_form_column_room')() },
+            { value: 'subject', display: this.translation.getTranslation('preferences_form_column_subject')() },
+            { value: 'teacher', display: this.translation.getTranslation('preferences_form_column_teacher')() },
+          ]),
         },
         valueChanges: c => {
           this.registry.getByNameForSelect(c)
@@ -45,7 +46,7 @@ export class PreferencesDialogComponent {
       },
       columnId: {
         type: Controls.select,
-        label: 'Column value',
+        label: this.translation.getTranslation('preferences_form_column_name'),
         additionalFields: {
           searchable: false,
           items: this.selectedColumnItems,
@@ -55,7 +56,7 @@ export class PreferencesDialogComponent {
     },
     submit: {
       button: Buttons.Submit.Flat,
-      buttonText: 'Submit',
+      buttonText: this.translation.getTranslation('preferences_form_submit'),
       onSubmit: e => {
         if (!e.valid) return;
 

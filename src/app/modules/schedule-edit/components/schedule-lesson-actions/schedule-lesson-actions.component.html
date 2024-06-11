@@ -1,15 +1,15 @@
 <mat-icon class="actions" [matMenuTriggerFor]="menu">more_vert</mat-icon>
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="editLesson()">
-    Edit
+    {{ 'lesson_actions_edit' | translation }}
     <mat-icon>edit</mat-icon>
   </button>
   <button mat-menu-item (click)="duplicateLesson()">
-    Duplicate
+    {{ 'lesson_actions_duplicate' | translation }}
     <mat-icon>content_copy</mat-icon>
   </button>
   <button mat-menu-item class="danger" (click)="deleteLesson()">
-    Delete
+    {{ 'lesson_actions_delete' | translation }}
     <mat-icon>delete</mat-icon>
   </button>
 </mat-menu>
