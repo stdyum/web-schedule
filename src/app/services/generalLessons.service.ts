@@ -33,9 +33,7 @@ export class GeneralLessonsService extends CrudService<ScheduleLesson, ScheduleA
         for (let i = 0; i < lessons.length; i++) {
           if (lessons[i].id !== request.id) continue;
 
-          console.log(JSON.parse(JSON.stringify(lessons[i])));
           lessons[i] = { ...lessons[i], ...data };
-          console.log(lessons[i]);
         }
         this.service.lessons = lessons;
       },

@@ -53,7 +53,6 @@ export class ScheduleHeaderComponent implements OnInit, OnDestroy {
     this.navigateSubscription = this.dialogService
       .open(SearchScheduleDialogComponent, { data: data })
       .afterClosed()
-      .pipe(tap(console.log))
       .pipe(filter(v => !!v))
       .pipe(map(v => <SearchScheduleFormData>v))
       .pipe(

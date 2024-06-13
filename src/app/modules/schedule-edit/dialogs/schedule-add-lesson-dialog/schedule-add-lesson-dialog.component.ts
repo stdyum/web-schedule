@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Validators } from '@angular/forms';
 import { FormBuilderComponent, FormConfig } from '@likdan/form-builder-core';
-import { ScheduleAddLessonService } from './schedule-add-lesson-dialog.service';
 import { ScheduleLesson } from '../../../../entities/schedule';
 import { Buttons, Controls } from '@likdan/form-builder-material';
-import { RegistryService } from '@likdan/studyum-core';
+import { RegistryService, TranslationService } from '@likdan/studyum-core';
 
 @Component({
   selector: 'app-schedule-add-lesson-dialog',
@@ -20,13 +19,14 @@ import { RegistryService } from '@likdan/studyum-core';
 export class ScheduleAddLessonDialogComponent {
   private dialog = inject(MatDialogRef);
   private registryService = inject(RegistryService);
-  private service = inject(ScheduleAddLessonService);
   private config = inject<ScheduleLesson | null>(MAT_DIALOG_DATA);
+  private translation = inject(TranslationService);
+
   formConfig: FormConfig<any> = {
     controls: {
       subjectId: {
         type: Controls.select,
-        label: 'Subject',
+        label: this.translation.getTranslation('lesson_form_subject'),
         additionalFields: {
           searchable: false,
           items: this.registryService.getSubjectsPaginatedForSelect(),
@@ -35,7 +35,7 @@ export class ScheduleAddLessonDialogComponent {
       },
       teacherId: {
         type: Controls.select,
-        label: 'Teacher',
+        label: this.translation.getTranslation('lesson_form_teacher'),
         additionalFields: {
           searchable: false,
           items: this.registryService.getTeachersPaginatedForSelect(),
@@ -44,7 +44,7 @@ export class ScheduleAddLessonDialogComponent {
       },
       groupId: {
         type: Controls.select,
-        label: 'Group',
+        label: this.translation.getTranslation('lesson_form_group'),
         additionalFields: {
           searchable: false,
           items: this.registryService.getGroupsPaginatedForSelect(),
@@ -53,7 +53,7 @@ export class ScheduleAddLessonDialogComponent {
       },
       roomId: {
         type: Controls.select,
-        label: 'Room',
+        label: this.translation.getTranslation('lesson_form_room'),
         additionalFields: {
           searchable: false,
           items: this.registryService.getRoomsPaginatedForSelect(),
@@ -62,42 +62,68 @@ export class ScheduleAddLessonDialogComponent {
       },
       primaryColor: {
         type: Controls.colorSelect,
-        label: 'Primary color',
+        label: this.translation.getTranslation('lesson_form_primary_color'),
         additionalFields: {
           searchable: false,
-          items: this.service.primaryColors$,
+          items: computed(() => [
+            {
+              value: '#ffffff',
+              display: this.translation.getTranslation('colors_white')(),
+            },
+            {
+              value: '#99ff99',
+              display: this.translation.getTranslation('colors_lime')(),
+            },
+            {
+              value: '#9999ff',
+              display: this.translation.getTranslation('colors_purple')(),
+            },
+          ]),
         },
         validators: [Validators.required],
       },
       secondaryColor: {
         type: Controls.colorSelect,
-        label: 'Secondary color',
+        label: this.translation.getTranslation('lesson_form_secondary_color'),
         additionalFields: {
           searchable: false,
-          items: this.service.secondaryColors$,
+          items: computed(() => [
+            {
+              value: '#ffffff',
+              display: this.translation.getTranslation('colors_white')(),
+            },
+            {
+              value: '#99ff99',
+              display: this.translation.getTranslation('colors_lime')(),
+            },
+            {
+              value: '#9999ff',
+              display: this.translation.getTranslation('colors_purple')(),
+            },
+          ]),
         },
         validators: [Validators.required],
       },
       lessonIndex: {
         type: Controls.numberInput,
-        label: 'Lesson number',
+        label: this.translation.getTranslation('lesson_form_lesson_number'),
         validators: [Validators.required],
       },
       startTime: {
         type: Controls.datetime,
-        label: 'Start time',
+        label: this.translation.getTranslation('lesson_form_start_time'),
         validators: [Validators.required],
       },
       endTime: {
         type: Controls.datetime,
-        label: 'End time',
+        label: this.translation.getTranslation('lesson_form_end_time'),
         validators: [Validators.required],
       },
     },
     initialValue: this.parseInitialData(this.config),
     submit: {
       button: Buttons.Submit.Flat,
-      buttonText: 'Submit',
+      buttonText: this.translation.getTranslation('lesson_form_submit'),
       onSubmit: e => {
         if (!e.valid) return;
 
