@@ -3,8 +3,9 @@ import { FormBuilderComponent, FormConfig } from '@likdan/form-builder-core';
 import { Buttons, Controls } from '@likdan/form-builder-material';
 import { RegistryService, TranslationService } from '@likdan/studyum-core';
 import { Validators } from '@angular/forms';
-import { take } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-preferences-dialog',
@@ -17,7 +18,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreferencesDialogComponent {
-  selectedColumnItems = signal<any[]>([]);
+  selectedColumnItems = signal<Object>([]);
 
   private registry = inject(RegistryService);
   private dialog = inject(MatDialogRef);
@@ -38,9 +39,10 @@ export class PreferencesDialogComponent {
           ]),
         },
         valueChanges: c => {
-          this.registry.getByNameForSelect(c)
-            .pipe(take((1)))
-            .subscribe(this.selectedColumnItems.set.bind(this.selectedColumnItems));
+          const config = this.registry.getByNamePaginatedSelectConfig(c);
+          ((config as any)["items"] as Observable<any[]>)
+            .pipe(takeUntilDestroyed())
+            .subscribe(i => this.selectedColumnItems.set({ ...config, items: i }))
         },
         validators: [Validators.required],
       },
@@ -48,8 +50,12 @@ export class PreferencesDialogComponent {
         type: Controls.select,
         label: this.translation.getTranslation('preferences_form_column_name'),
         additionalFields: {
-          searchable: false,
-          items: this.selectedColumnItems,
+          searchable: true,
+          searchInputText: this.translation.getTranslation('controls_select_search'),
+          loadNextButtonText: this.translation.getTranslation('controls_select_load_next'),
+          items: computed(() => (this.selectedColumnItems() as any)['items']),
+          next: computed(() => (this.selectedColumnItems() as any)['next']),
+          reload: computed(() => (this.selectedColumnItems() as any)['reload']),
         },
         validators: [Validators.required],
       },

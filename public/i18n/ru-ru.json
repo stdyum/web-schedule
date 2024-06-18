@@ -2,6 +2,8 @@
   "header_logout": "Выход",
   "header_login": "Вход",
   "header_signup": "Регистрация",
+  "controls_select_search": "Поиск",
+  "controls_select_load_next": "Загрузить еще",
   "schedule_breadcrumbs_subject": "Предмет",
   "schedule_breadcrumbs_group": "Группа",
   "schedule_breadcrumbs_teacher": "Преподаватель",
@@ -60,5 +62,9 @@
   "weekdays_wednesday": "Среда",
   "weekdays_thursday": "Четверг",
   "weekdays_friday": "Пятница",
-  "weekdays_saturday": "Суббота"
+  "weekdays_saturday": "Суббота",
+  "dialogs_delete_confirmation_title": "Подтвердите удаление",
+  "dialogs_delete_confirmation_body": "Вы уверены что хотите удалить данный урок",
+  "dialogs_delete_confirmation_confirm_button": "Удалить",
+  "dialogs_delete_confirmation_cancel_button": "Отменить"
 }

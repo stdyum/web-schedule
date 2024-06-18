@@ -46,7 +46,7 @@ export class ScheduleLessonActionsService {
   }
 
   deleteLesson(lesson: ScheduleLesson | ScheduleGeneralLesson): Observable<void> {
-    const query = 'dayIndex' in lesson ? { dayIndex: lesson.dayIndex } : { date: lesson.startTime };
+    const query = 'dayIndex' in lesson ? { dayIndex: lesson.dayIndex } : { date: lesson.startTime.toISOString() };
 
     return this.crudService.delete(lesson.id!, query, lesson);
   }

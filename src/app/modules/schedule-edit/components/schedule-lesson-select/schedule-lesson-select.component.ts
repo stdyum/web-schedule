@@ -14,7 +14,7 @@ import {
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { map, Subscription } from 'rxjs';
 import { ScheduleLesson } from '../../../../entities/schedule';
-import { TextInputComponent } from '@likdan/form-builder-material/src/components';
+import { TextInputComponent } from '@likdan/form-builder-material/controls/components/inputs/text-input';
 import { ScheduleLessonComponent } from '../../../../components/schedule-lesson/schedule-lesson.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';

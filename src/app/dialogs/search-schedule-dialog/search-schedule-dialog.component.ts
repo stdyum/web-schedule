@@ -6,7 +6,8 @@ import { FormBuilderComponent, FormConfig } from '@likdan/form-builder-core';
 import { SearchScheduleFormData } from './search-schedule-dialog.dto';
 import { Buttons, Controls } from '@likdan/form-builder-material';
 import { RegistryService, TranslationService } from '@likdan/studyum-core';
-import { take } from 'rxjs';
+import { Observable } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search-schedule-dialog',
@@ -17,10 +18,10 @@ import { take } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchScheduleDialogComponent {
-  private dialog = inject(MatDialogRef);
-  private registryService = inject(RegistryService);
+  selectedColumnItems = signal<Object>([]);
 
-  private columnItems = signal<any[]>([]);
+  private dialog = inject(MatDialogRef);
+  private registry = inject(RegistryService);
   private config = inject<SearchScheduleFormData>(MAT_DIALOG_DATA);
   private translation = inject(TranslationService);
 
@@ -39,9 +40,10 @@ export class SearchScheduleDialogComponent {
           ]),
         },
         valueChanges: c => {
-          this.registryService.getByNameForSelect(c)
-            .pipe(take(1))
-            .subscribe(this.columnItems.set.bind(this.columnItems));
+          const config = this.registry.getByNamePaginatedSelectConfig(c);
+          ((config as any)['items'] as Observable<any[]>)
+            .pipe(takeUntilDestroyed())
+            .subscribe(i => this.selectedColumnItems.set({ ...config, items: i }));
         },
         validators: [Validators.required],
       },
@@ -49,8 +51,12 @@ export class SearchScheduleDialogComponent {
         type: Controls.select,
         label: this.translation.getTranslation('search_form_column_name'),
         additionalFields: {
-          items: this.columnItems,
-          searchable: false,
+          searchable: true,
+          searchInputText: this.translation.getTranslation('controls_select_search'),
+          loadNextButtonText: this.translation.getTranslation('controls_select_load_next'),
+          items: computed(() => (this.selectedColumnItems() as any)['items']),
+          next: computed(() => (this.selectedColumnItems() as any)['next']),
+          reload: computed(() => (this.selectedColumnItems() as any)['reload']),
         },
         validators: [Validators.required],
       },
@@ -62,7 +68,7 @@ export class SearchScheduleDialogComponent {
     initialValue: this.parseInitialData(this.config),
     submit: {
       button: Buttons.Submit.Flat,
-      buttonText:  this.translation.getTranslation('search_form_search'),
+      buttonText: this.translation.getTranslation('search_form_search'),
       onSubmit: e => {
         if (!e.valid) return;
 

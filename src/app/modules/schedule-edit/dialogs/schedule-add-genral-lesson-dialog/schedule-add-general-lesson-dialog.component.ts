@@ -19,7 +19,7 @@ import { RegistryService, TranslationService } from '@likdan/studyum-core';
 })
 export class ScheduleAddGeneralLessonDialogComponent {
   private dialog = inject(MatDialogRef);
-  private registryService = inject(RegistryService);
+  private registry = inject(RegistryService);
   private config = inject<ScheduleGeneralLesson | null>(MAT_DIALOG_DATA);
   private translation = inject(TranslationService);
 
@@ -29,8 +29,10 @@ export class ScheduleAddGeneralLessonDialogComponent {
         type: Controls.select,
         label: this.translation.getTranslation('general_lesson_form_subject'),
         additionalFields: {
-          searchable: false,
-          items: this.registryService.getSubjectsPaginatedForSelect(),
+          searchable: true,
+          searchInputText: this.translation.getTranslation('controls_select_search'),
+          loadNextButtonText: this.translation.getTranslation('controls_select_load_next'),
+          ...this.registry.getSubjectsPaginatedSelectConfig(),
         },
         validators: [Validators.required],
       },
@@ -38,8 +40,10 @@ export class ScheduleAddGeneralLessonDialogComponent {
         type: Controls.select,
         label: this.translation.getTranslation('general_lesson_form_teacher'),
         additionalFields: {
-          searchable: false,
-          items: this.registryService.getTeachersPaginatedForSelect(),
+          searchable: true,
+          searchInputText: this.translation.getTranslation('controls_select_search'),
+          loadNextButtonText: this.translation.getTranslation('controls_select_load_next'),
+          ...this.registry.getTeachersPaginatedSelectConfig(),
         },
         validators: [Validators.required],
       },
@@ -47,8 +51,10 @@ export class ScheduleAddGeneralLessonDialogComponent {
         type: Controls.select,
         label: this.translation.getTranslation('general_lesson_form_group'),
         additionalFields: {
-          searchable: false,
-          items: this.registryService.getGroupsPaginatedForSelect(),
+          searchable: true,
+          searchInputText: this.translation.getTranslation('controls_select_search'),
+          loadNextButtonText: this.translation.getTranslation('controls_select_load_next'),
+          ...this.registry.getGroupsPaginatedSelectConfig(),
         },
         validators: [Validators.required],
       },
@@ -56,8 +62,10 @@ export class ScheduleAddGeneralLessonDialogComponent {
         type: Controls.select,
         label: this.translation.getTranslation('general_lesson_form_room'),
         additionalFields: {
-          searchable: false,
-          items: this.registryService.getRoomsPaginatedForSelect(),
+          searchable: true,
+          searchInputText: this.translation.getTranslation('controls_select_search'),
+          loadNextButtonText: this.translation.getTranslation('controls_select_load_next'),
+          ...this.registry.getRoomsPaginatedSelectConfig(),
         },
         validators: [Validators.required],
       },

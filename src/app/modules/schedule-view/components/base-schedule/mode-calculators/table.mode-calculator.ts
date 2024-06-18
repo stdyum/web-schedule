@@ -95,7 +95,7 @@ export class TableModeCalculator implements IModeCalculator {
     if ('dayIndex' in lessons[0]) return lessons[0].dayIndex + 1
 
     const date = lessons[0].endTime;
-    return datesDiff(date, this.start, dateUnits.day) + 1;
+    return datesDiff(date, this.start, dateUnits.day) + 2;
   }
 
   styles(_: ScheduleLesson[]): any {

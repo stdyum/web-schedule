@@ -120,7 +120,7 @@ export class TimeModeCalculator implements IModeCalculator {
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
     const date = lessons[0].startTime;
-    return datesDiff(date, this.start, dateUnits.day) + 1;
+    return datesDiff(date, this.start, dateUnits.day) + 2;
   }
 
   styles(_: ScheduleLesson[]): any {

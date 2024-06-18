@@ -19,10 +19,10 @@
     "@angular/platform-browser": "^18.0.0-next.0",
     "@angular/platform-browser-dynamic": "^18.0.0-next.0",
     "@angular/router": "^18.0.0-next.0",
-    "@likdan/form-builder-core": "0.0.9",
-    "@likdan/form-builder-material": "0.0.11",
+    "@likdan/form-builder-core": "0.0.10",
+    "@likdan/form-builder-material": "0.0.13",
     "@likdan/state-mapper": "^0.0.1",
-    "@likdan/studyum-core": "^0.0.15",
+    "@likdan/studyum-core": "^0.0.17",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

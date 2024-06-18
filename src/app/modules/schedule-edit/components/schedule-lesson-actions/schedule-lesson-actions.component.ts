@@ -1,15 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Injector,
-  Input,
-  Type,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, Type, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, map, switchMap } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs';
 import { ScheduleGeneralLesson, ScheduleLesson } from '../../../../entities/schedule';
 import { ScheduleLessonActionsService } from './schedule-lesson-actions.service';
 import {
@@ -20,7 +11,7 @@ import {
 } from '../../dialogs/schedule-add-genral-lesson-dialog/schedule-add-general-lesson-dialog.component';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { TranslationPipe } from '@likdan/studyum-core';
+import { ConfirmationDialog, TranslationPipe } from '@likdan/studyum-core';
 
 @Component({
   selector: 'schedule-lesson-actions',
@@ -44,15 +35,13 @@ export class ScheduleLessonActionsComponent {
   private dialogService = inject(MatDialog);
   private service = inject(ScheduleLessonActionsService);
   private cdr = inject(ChangeDetectorRef);
-  private injector = inject(Injector);
-
-  private dialogInjector = Injector.create({ parent: this.injector, providers: [] });
+  private dialog = inject(MatDialog);
 
   editLesson(): void {
     this.closeMenu();
 
     this.dialogService
-      .open(this.dialogComponent(), { data: this.lesson, injector: this.dialogInjector })
+      .open(this.dialogComponent(), { data: this.lesson })
       .afterClosed()
       .pipe(filter(v => !!v))
       .pipe(map(v => v!))
@@ -64,7 +53,7 @@ export class ScheduleLessonActionsComponent {
     this.closeMenu();
 
     this.dialogService
-      .open(this.dialogComponent(), { data: this.lesson, injector: this.dialogInjector })
+      .open(this.dialogComponent(), { data: this.lesson })
       .afterClosed()
       .pipe(filter(v => !!v))
       .pipe(map(v => v!))
@@ -75,22 +64,20 @@ export class ScheduleLessonActionsComponent {
   deleteLesson(): void {
     this.closeMenu();
 
-    //todo implement in core
-    //
-    // const data: ConfirmationDialogData = {
-    //   title: 'confirmDeletionTitle',
-    //   description: 'confirmDeletionDescription',
-    //   icon: 'delete',
-    //   color: 'danger',
-    // };
-    // this.dialogService
-    //   .open(ConfirmationDialogComponent, { data: data, injector: this.dialogInjector })
-    //   .afterClosed()
-    //   .pipe(filterNotNull())
-    //   .pipe(switchMap(() => this.service.deleteLesson(this.lesson as ScheduleLesson)))
-    //   .subscribe();
-
-    this.service.deleteLesson(this.lesson as ScheduleLesson).subscribe();
+    this.dialog.open(ConfirmationDialog, {
+      data: {
+        title: 'dialogs_delete_confirmation_title',
+        body: 'dialogs_delete_confirmation_body',
+        confirmButtonText: 'dialogs_delete_confirmation_confirm_button',
+        confirmButtonColor: 'error',
+        cancelButtonText: 'dialogs_delete_confirmation_cancel_button',
+      },
+    })
+      .afterClosed()
+      .pipe(filter(v => !!v))
+      .pipe(switchMap(() => this.service.deleteLesson(this.lesson as ScheduleLesson)))
+      .pipe(take(1))
+      .subscribe();
   }
 
   private dialogComponent(): Type<any> {
