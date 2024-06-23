@@ -62,16 +62,15 @@ export class TimeModeCalculator implements IModeCalculator {
     });
 
     const dayIndexes = schedule.lessons.map(l => l.dayIndex);
-    const weekday = (Math.min(...dayIndexes) - 1);
     this.start = new Date(0);
-    this.start.setDate(this.start.getDate() + (weekday - this.start.getDay()));
+    this.start.setDate(this.start.getDate() - this.start.getDay());
 
     this.yOffset = this.yTime(
       dates.reduce((a, b) => (a < b ? a : b), schedule.lessons[0].startTime),
     );
 
     this.days = [];
-    for (let i = Math.min(...dayIndexes) - 1; i < Math.max(...dayIndexes); i++) {
+    for (let i = 0; i <= Math.max(...dayIndexes); i++) {
       this.days.push(this.getWeekdayByDayIndex(i));
     }
 
@@ -120,7 +119,7 @@ export class TimeModeCalculator implements IModeCalculator {
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
     const date = lessons[0].startTime;
-    return datesDiff(date, this.start, dateUnits.day) + 2;
+    return datesDiff(date, this.start, dateUnits.day) + 1;
   }
 
   styles(_: ScheduleLesson[]): any {
@@ -134,6 +133,7 @@ export class TimeModeCalculator implements IModeCalculator {
   private getWeekdayByDayIndex(index: number): string {
     const date = new Date();
     date.setDate(date.getDate() - date.getDay() + index);
-    return date.toLocaleDateString(undefined, { weekday: 'long' });
+    const weekday =  date.toLocaleDateString(undefined, { weekday: 'long' });
+    return `weekdays_${weekday.toLowerCase()}`
   }
 }

@@ -15,7 +15,7 @@
 
   <div class="weekdays-container">
     @for (day of mode.days; track day) {
-      <p class="weekday">{{ day }}</p>
+      <p class="weekday">{{ day | translation  }}</p>
     }
   </div>
   <div class="lessons-container">

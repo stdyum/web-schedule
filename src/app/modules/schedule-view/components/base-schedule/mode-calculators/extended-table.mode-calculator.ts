@@ -15,15 +15,10 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
   private cellHeight = 100;
 
   initSchedule(schedule: Schedule): void {
-    schedule.info.startDate = new Date(schedule.info.startDate);
-    schedule.info.endDate = new Date(schedule.info.endDate);
     this.start = schedule.info.startDate;
 
     const groupedLessons: { [day: string]: { [rowIndex: number]: number } } = {};
     schedule.lessons.forEach(l => {
-      l.endTime = new Date(l.endTime)
-      l.startTime = new Date(l.startTime)
-
       const key = l.startTime.toDateString();
       groupedLessons[key] ??= {};
       groupedLessons[key][l.lessonIndex] ??= 0;
@@ -52,12 +47,11 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
     });
 
     const dayIndexes = schedule.lessons.map(l => l.dayIndex);
-    const weekday = (Math.min(...dayIndexes) - 1);
     this.start = new Date(0);
-    this.start.setDate(this.start.getDate() + (weekday - this.start.getDay()));
+    this.start.setDate(this.start.getDate() - this.start.getDay());
 
     this.days = [];
-    for (let i = Math.min(...dayIndexes) - 1; i < Math.max(...dayIndexes); i++) {
+    for (let i = 0; i <= Math.max(...dayIndexes); i++) {
       this.days.push(this.getWeekdayByDayIndex(i));
     }
 
@@ -74,6 +68,7 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
       [key: string | number]: { [rowIndex: number]: number };
     },
   ): void {
+    if (schedule.lessons.length === 0) return;
     const maxIndex = Math.max(...schedule.lessons.map(l => l.lessonIndex));
 
     Object.values(groupedLessons).forEach(d => {
@@ -117,8 +112,7 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
   }
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
-    if ('dayIndex' in lessons[0]) return lessons[0].dayIndex + 1
-    return datesDiff(lessons[0].endTime, this.start, dateUnits.day) + 2;
+    return datesDiff(lessons[0].endTime, this.start, dateUnits.day) + 1;
   }
 
   styles(_: ScheduleLesson[]): any {
@@ -128,6 +122,7 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
   private getWeekdayByDayIndex(index: number): string {
     const date = new Date();
     date.setDate(date.getDate() - date.getDay() + index);
-    return date.toLocaleDateString(undefined, { weekday: 'long' });
+    const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+    return `weekdays_${weekday.toLowerCase()}`;
   }
 }

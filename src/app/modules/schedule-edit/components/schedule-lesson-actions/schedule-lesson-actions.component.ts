@@ -4,9 +4,11 @@ import { filter, map, switchMap, take } from 'rxjs';
 import { ScheduleGeneralLesson, ScheduleLesson } from '../../../../entities/schedule';
 import { ScheduleLessonActionsService } from './schedule-lesson-actions.service';
 import {
+  DialogConfig as LessonDialogConfig,
   ScheduleAddLessonDialogComponent,
 } from '../../dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.component';
 import {
+  DialogConfig as GeneralLessonDialogConfig,
   ScheduleAddGeneralLessonDialogComponent,
 } from '../../dialogs/schedule-add-genral-lesson-dialog/schedule-add-general-lesson-dialog.component';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -41,7 +43,7 @@ export class ScheduleLessonActionsComponent {
     this.closeMenu();
 
     this.dialogService
-      .open(this.dialogComponent(), { data: this.lesson })
+      .open(this.dialogComponent(), { data: this.dialogConfig(this.lesson, true) })
       .afterClosed()
       .pipe(filter(v => !!v))
       .pipe(map(v => v!))
@@ -53,7 +55,7 @@ export class ScheduleLessonActionsComponent {
     this.closeMenu();
 
     this.dialogService
-      .open(this.dialogComponent(), { data: this.lesson })
+      .open(this.dialogComponent(), { data: this.dialogConfig(this.lesson, false) })
       .afterClosed()
       .pipe(filter(v => !!v))
       .pipe(map(v => v!))
@@ -84,6 +86,20 @@ export class ScheduleLessonActionsComponent {
     return this.service.isGeneral
       ? ScheduleAddGeneralLessonDialogComponent
       : ScheduleAddLessonDialogComponent;
+  }
+
+  private dialogConfig(initial: ScheduleLesson | ScheduleGeneralLesson | null, isEditMode: boolean): LessonDialogConfig | GeneralLessonDialogConfig | null {
+    if (!initial) return null;
+
+    return this.service.isGeneral
+      ? <GeneralLessonDialogConfig>{
+        initial: initial,
+        hideDayControls: isEditMode,
+      }
+      : <LessonDialogConfig>{
+        initial: initial,
+        hideDateControls: isEditMode,
+      };
   }
 
   private closeMenu(): void {

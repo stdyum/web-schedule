@@ -39,8 +39,6 @@ export class BaseScheduleService {
         calculator = new ExtendedTableModeCalculator();
         break;
     }
-
-
     if (this.service.schedule) {
       const schedule = this.service.schedule;
       this.getScheduleType(schedule) === 'current'
@@ -52,6 +50,6 @@ export class BaseScheduleService {
   }
 
   private getScheduleType(schedule: Schedule | GeneralSchedule): 'current' | 'general' {
-    return 'startDate' in schedule.info && new Date(schedule.info.startDate).getMilliseconds() !== 0 ? 'current' : 'general';
+    return 'startDate' in schedule.info && new Date(schedule.info.startDate).getFullYear() !== 1 ? 'current' : 'general';
   }
 }

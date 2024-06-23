@@ -86,6 +86,7 @@ export class ScheduleViewComponent implements OnInit {
 
   private parseParams(root: Params): Observable<GetScheduleDTO> {
     const startOfWeek = new Date();
+    startOfWeek.setHours(0, 0, 0, 0);
     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
 
     const to = new Date(startOfWeek);

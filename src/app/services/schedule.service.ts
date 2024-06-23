@@ -58,7 +58,11 @@ export class ScheduleService {
 
   getSchedule(dto: GetScheduleDTO): Observable<Schedule> {
     return this.http
-      .get<Schedule>('api/schedule/v1/schedule', { params: dto ?? {}, context: httpContextWithStudyPlace() })
+      .get<Schedule>('api/schedule/v1/schedule', {
+        params: dto ?? {},
+        context: httpContextWithStudyPlace(),
+      })
+      .pipe(map(s => this.processSchedule(s)))
       .pipe(tap(s => this._schedule$.next(s)))
       .pipe(tap(() => (this.isGeneral = false)));
   }
@@ -69,7 +73,36 @@ export class ScheduleService {
         params: dto ?? {},
         context: httpContextWithStudyPlace(),
       })
+      .pipe(map(s => this.processGeneralSchedule(s)))
       .pipe(tap(s => this._schedule$.next(s)))
       .pipe(tap(() => (this.isGeneral = true)));
+  }
+
+  private processSchedule(schedule: Schedule): Schedule {
+    schedule.info.startDate = new Date(schedule.info.startDate);
+    schedule.info.endDate = new Date(schedule.info.endDate);
+
+    schedule.lessons.forEach(l => {
+      l.startTime = new Date(l.startTime);
+      l.endTime = new Date(l.endTime);
+    });
+
+    return schedule;
+  }
+
+  private processGeneralSchedule(schedule: GeneralSchedule): GeneralSchedule {
+    const timezoneOffset = new Date().getTimezoneOffset();
+    schedule.lessons.forEach(l => {
+      l.startTime = new Date((l.startTime as any as number) / 1_000_000);
+      l.endTime = new Date((l.endTime as any as number) / 1_000_000);
+
+      l.startTime.setMinutes(l.startTime.getMinutes() + timezoneOffset);
+      l.endTime.setMinutes(l.endTime.getMinutes() + timezoneOffset);
+
+      l.startTime.setDate(l.startTime.getDate() - l.startTime.getDay() + l.dayIndex);
+      l.endTime.setDate(l.endTime.getDate() - l.endTime.getDay() + l.dayIndex);
+    });
+
+    return schedule;
   }
 }

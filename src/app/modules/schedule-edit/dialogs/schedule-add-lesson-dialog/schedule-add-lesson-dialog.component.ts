@@ -6,6 +6,11 @@ import { ScheduleLesson } from '../../../../entities/schedule';
 import { Buttons, Controls } from '@likdan/form-builder-material';
 import { RegistryService, TranslationService } from '@likdan/studyum-core';
 
+export interface DialogConfig {
+  initial: ScheduleLesson,
+  hideDateControls: boolean
+}
+
 @Component({
   selector: 'app-schedule-add-lesson-dialog',
   templateUrl: './schedule-add-lesson-dialog.component.html',
@@ -19,7 +24,7 @@ import { RegistryService, TranslationService } from '@likdan/studyum-core';
 export class ScheduleAddLessonDialogComponent {
   private dialog = inject(MatDialogRef);
   private registry = inject(RegistryService);
-  private config = inject<ScheduleLesson | null>(MAT_DIALOG_DATA);
+  private config = inject<DialogConfig | null>(MAT_DIALOG_DATA);
   private translation = inject(TranslationService);
 
   formConfig: FormConfig<any> = {
@@ -120,15 +125,17 @@ export class ScheduleAddLessonDialogComponent {
       startTime: {
         type: Controls.datetime,
         label: this.translation.getTranslation('lesson_form_start_time'),
+        hidden: !!this.config?.hideDateControls,
         validators: [Validators.required],
       },
       endTime: {
         type: Controls.datetime,
         label: this.translation.getTranslation('lesson_form_end_time'),
+        hidden: !!this.config?.hideDateControls,
         validators: [Validators.required],
       },
     },
-    initialValue: this.parseInitialData(this.config),
+    initialValue: this.parseInitialData(this.config?.initial),
     submit: {
       button: Buttons.Submit.Flat,
       buttonText: this.translation.getTranslation('lesson_form_submit'),
@@ -143,15 +150,6 @@ export class ScheduleAddLessonDialogComponent {
 
   private parseFormBody(body: any): any {
     body.lessonIndex--;
-
-    const startTime = body.startTime.time;
-    body.startTime = new Date(body.startTime.date);
-    body.startTime.setHours(startTime.hour, startTime.minute);
-
-    const endTime = body.endTime.time;
-    body.endTime = new Date(body.endTime.date);
-    body.endTime.setHours(endTime.hour, endTime.minute);
-
     return body;
   }
 
@@ -166,8 +164,8 @@ export class ScheduleAddLessonDialogComponent {
       primaryColor: data.primaryColor,
       secondaryColor: data.secondaryColor,
       lessonIndex: this.parseIndex(data.lessonIndex),
-      startTime: this.parseDateToFormValue(data.startTime),
-      endTime: this.parseDateToFormValue(data.endTime),
+      startTime: data.startTime,
+      endTime: data.endTime,
     };
   }
 
@@ -175,17 +173,5 @@ export class ScheduleAddLessonDialogComponent {
     if (index === undefined || index === null) return null;
 
     return index + 1;
-  }
-
-  private parseDateToFormValue(date?: Date): { date: Date, time: { minute: number, hour: number } } | null {
-    if (!date) return null;
-
-    return {
-      date: date,
-      time: {
-        hour: date.getHours(),
-        minute: date.getMinutes(),
-      },
-    };
   }
 }

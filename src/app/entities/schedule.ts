@@ -1,7 +1,7 @@
 export interface ScheduleLesson {
   id: string;
   studyPlaceId: string;
-  type: 'current' | 'general';
+  type: 'current';
   group: {
     id: string;
     name: string;
@@ -28,6 +28,7 @@ export interface ScheduleLesson {
 export interface ScheduleGeneralLesson {
   id?: string;
   studyPlaceId?: string;
+  type: 'general';
   primaryColor: string;
   secondaryColor?: string;
   endTime: Date;

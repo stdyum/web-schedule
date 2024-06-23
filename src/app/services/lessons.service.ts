@@ -25,7 +25,12 @@ export class LessonsService extends CrudService<ScheduleLesson, ScheduleAddLesso
     this.onAction = {
       POST: (response, _, data) => {
         const lessons = [...this.service.lessons];
-        lessons.push({ ...response.list[0], ...data });
+        lessons.push({
+          ...response.list[0],
+          ...data,
+          startTime: new Date(response.list[0].startTime),
+          endTime: new Date(response.list[0].endTime),
+        });
         this.service.lessons = lessons;
       },
       PUT: (_, request, data) => {
@@ -33,7 +38,12 @@ export class LessonsService extends CrudService<ScheduleLesson, ScheduleAddLesso
         for (let i = 0; i < lessons.length; i++) {
           if (lessons[i].id !== request.id) continue;
 
-          lessons[i] = { ...lessons[i], ...data };
+          lessons[i] = {
+            ...lessons[i],
+            ...data,
+            startTime: new Date(lessons[i].startTime),
+            endTime: new Date(lessons[i].endTime)
+          };
         }
         this.service.lessons = lessons;
       },

@@ -7,6 +7,7 @@ import { AsyncPipe } from '@angular/common';
 import { ScheduleCellComponent } from '../schedule-cell/schedule-cell.component';
 import { ScheduleCellPositionDirective } from './schedule-cell-position.directive';
 import { ScheduleModeGroupLessonsPipe } from './mode-calculators/pipes/schedule-mode-group-lessons.pipe';
+import { TranslationPipe } from '@likdan/studyum-core';
 
 @Component({
   selector: 'base-schedule',
@@ -19,6 +20,7 @@ import { ScheduleModeGroupLessonsPipe } from './mode-calculators/pipes/schedule-
     ScheduleCellComponent,
     ScheduleCellPositionDirective,
     ScheduleModeGroupLessonsPipe,
+    TranslationPipe,
   ],
 })
 export class BaseScheduleComponent implements OnInit {

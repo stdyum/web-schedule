@@ -6,6 +6,10 @@ import { FormBuilderComponent, FormConfig } from '@likdan/form-builder-core';
 import { Buttons, Controls } from '@likdan/form-builder-material';
 import { RegistryService, TranslationService } from '@likdan/studyum-core';
 
+export interface DialogConfig {
+  initial: ScheduleGeneralLesson,
+  hideDayControls: boolean
+}
 
 @Component({
   selector: 'app-schedule-add-general-lesson-dialog',
@@ -20,7 +24,7 @@ import { RegistryService, TranslationService } from '@likdan/studyum-core';
 export class ScheduleAddGeneralLessonDialogComponent {
   private dialog = inject(MatDialogRef);
   private registry = inject(RegistryService);
-  private config = inject<ScheduleGeneralLesson | null>(MAT_DIALOG_DATA);
+  private config = inject<DialogConfig | null>(MAT_DIALOG_DATA);
   private translation = inject(TranslationService);
 
   formConfig: FormConfig<any> = {
@@ -153,6 +157,7 @@ export class ScheduleAddGeneralLessonDialogComponent {
             },
           ]),
         },
+        hidden: !!this.config?.hideDayControls,
         validators: [Validators.required],
       },
       startTime: {
@@ -166,7 +171,7 @@ export class ScheduleAddGeneralLessonDialogComponent {
         validators: [Validators.required],
       },
     },
-    initialValue: this.parseInitialData(this.config),
+    initialValue: this.parseInitialData(this.config?.initial),
     submit: {
       button: Buttons.Submit.Flat,
       buttonText: this.translation.getTranslation('general_lesson_form_submit'),
@@ -181,10 +186,9 @@ export class ScheduleAddGeneralLessonDialogComponent {
 
   private parseFormBody(body: any): any {
     body.lessonIndex--;
-    body.dayIndex--;
 
-    body.startTime = body.startTime.hour * 60 + body.startTime.minute;
-    body.endTime = body.endTime.hour * 60 + body.endTime.minute;
+    body.startTime = (body.startTime.hour * 60 + body.startTime.minute) * 60000000000;
+    body.endTime = (body.endTime.hour * 60 + body.endTime.minute) * 60000000000;
 
     return body;
   }
@@ -200,14 +204,14 @@ export class ScheduleAddGeneralLessonDialogComponent {
       primaryColor: data.primaryColor,
       secondaryColor: data.secondaryColor,
       lessonIndex: this.parseIndex(data.lessonIndex),
-      dayIndex: this.parseIndex(data.dayIndex),
+      dayIndex: data.dayIndex,
       startTime: this.parseDateToFormValue(data.startTime),
       endTime: this.parseDateToFormValue(data.endTime),
     };
   }
 
   private parseIndex(index?: number): number | null {
-    if (!index) return null;
+    if (index === undefined || index === null) return null;
 
     return index + 1;
   }

@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, Input, Type } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter, map, switchMap } from 'rxjs';
-import { ScheduleLesson } from '../../../../entities/schedule';
+import { ScheduleGeneralLesson, ScheduleLesson } from '../../../../entities/schedule';
 import { ScheduleAddLessonViewService } from './schedule-add-lesson-view.service';
 import {
-  ScheduleAddLessonDialogComponent
+  DialogConfig as LessonDialogConfig,
+  ScheduleAddLessonDialogComponent,
 } from '../../dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.component';
 import { ScheduleLessonSelectComponent } from '../schedule-lesson-select/schedule-lesson-select.component';
 import {
-  ScheduleAddGeneralLessonDialogComponent
+  DialogConfig as GeneralLessonDialogConfig,
+  ScheduleAddGeneralLessonDialogComponent,
 } from '../../dialogs/schedule-add-genral-lesson-dialog/schedule-add-general-lesson-dialog.component';
 
 @Component({
@@ -29,7 +31,7 @@ export class ScheduleAddLessonViewComponent {
 
   addLesson(template: ScheduleLesson | null): void {
     this.dialogService
-      .open(this.dialogComponent(), { data: template })
+      .open(this.dialogComponent(), { data: this.dialogConfig(template, false) })
       .afterClosed()
       .pipe(filter(v => !!v))
       .pipe(map(v => v!))
@@ -41,5 +43,19 @@ export class ScheduleAddLessonViewComponent {
     return this.service.isGeneral
       ? ScheduleAddGeneralLessonDialogComponent
       : ScheduleAddLessonDialogComponent;
+  }
+
+  private dialogConfig(initial: ScheduleLesson | ScheduleGeneralLesson | null, isEditMode: boolean): LessonDialogConfig | GeneralLessonDialogConfig | null {
+    if (!initial) return null;
+
+    return this.service.isGeneral
+      ? <GeneralLessonDialogConfig>{
+        initial: initial,
+        hideDayControls: isEditMode,
+      }
+      : <LessonDialogConfig>{
+        initial: initial,
+        hideDateControls: isEditMode,
+      };
   }
 }
